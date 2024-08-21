@@ -8,12 +8,13 @@ import java.util.Random;
  */
 public class App {
     public static void main(String[] args) {
-        int [] vetor = geraVetor(524288, 524288);
-        vetor = merge_sort(vetor);
-        System.out.println("Vetor gerado: ");
-        for (int i = 0; i < vetor.length; i++){
-            System.out.print(vetor[i] + " ");
-        }
+        int [] vetor = geraVetor(50000000, 50000000);
+        long t = System.nanoTime();
+        int maior = maxVal1(vetor, vetor.length);
+        System.out.println("\nmaior: " + maior + "\ntempo: " + (System.nanoTime() - t)/1000000);
+        t = System.nanoTime();
+        int maior1 = maxVal2(vetor, 0, vetor.length - 1);
+        System.out.println("\noutro maior: " + maior1 + "\ntempo: " + (System.nanoTime() - t)/1000000);
     }
 
     public static int[] merge_sort (int[] lista){
@@ -86,7 +87,7 @@ public class App {
             res = new int[nroPares + nroImpares];
 
             while ((contPar < nroPares) || (contImpar < nroImpares)) {
-                novoNum = rnd.nextInt(998)+1;
+                novoNum = rnd.nextInt(9999)+1;
 
                 if ((novoNum % 2 == 0) && (contPar < nroPares)) {
                     res[contPar+contImpar] = novoNum;
@@ -102,12 +103,30 @@ public class App {
         return res;
     }
 
-    public static long maxVal1(long A[], int n) {  
-        long max = A[0];
+    public static int maxVal1(int A[], int n) {  
+        int max = A[0];
         for (int i = 1; i < n; i++) {  
             if( A[i] > max ) 
                max = A[i];
         }
         return max;
+    }
+
+    public static int maxVal2(int A[], int init, int end) {  
+        if (end - init <= 1)
+            return max(A[init], A[end]);  
+        else {
+              int m = (init + end)/2;
+              int v1 = maxVal2(A,init,m);   
+              int v2 = maxVal2(A,m+1,end);  
+              return max(v1,v2);
+             }
+    }
+
+    public static int max(int a, int b) { 
+        if (a > b) 
+            return a;
+        else 
+            return b;
     }
 }
