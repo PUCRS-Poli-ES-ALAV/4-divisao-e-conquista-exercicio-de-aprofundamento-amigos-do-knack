@@ -8,13 +8,14 @@ import java.util.Random;
  */
 public class App {
     public static void main(String[] args) {
-        int [] vetor = geraVetor(50000000, 50000000);
-        long t = System.nanoTime();
-        int maior = maxVal1(vetor, vetor.length);
-        System.out.println("\nmaior: " + maior + "\ntempo: " + (System.nanoTime() - t)/1000000);
-        t = System.nanoTime();
-        int maior1 = maxVal2(vetor, 0, vetor.length - 1);
-        System.out.println("\noutro maior: " + maior1 + "\ntempo: " + (System.nanoTime() - t)/1000000);
+    //     int [] vetor = geraVetor(50000000, 50000000);
+    //     long t = System.nanoTime();
+    //     int maior = maxVal1(vetor, vetor.length);
+    //     System.out.println("\nmaior: " + maior + "\ntempo: " + (System.nanoTime() - t)/1000000);
+    //     t = System.nanoTime();
+    //     int maior1 = maxVal2(vetor, 0, vetor.length - 1);
+    //     System.out.println("\noutro maior: " + maior1 + "\ntempo: " + (System.nanoTime() - t)/1000000);
+        System.out.println(multiply("0101", "1101"));
     }
 
     public static int[] merge_sort (int[] lista){
@@ -128,5 +129,51 @@ public class App {
             return a;
         else 
             return b;
+    }
+
+    public static long multiply(String X, String Y) {
+        
+        int tam = Math.max(X.length(), Y.length());
+
+        int bits = 1;
+        while (bits < tam) {
+            bits *= 2;
+        }
+        
+        X = tamanhoString(X, bits);
+        Y = tamanhoString(Y, bits);
+        
+        return multiplyAux(X, Y, bits);
+    }
+    
+    private static long multiplyAux(String X, String Y, int tam) {
+        // Base do algoritmo: se o comprimento for 1, apenas multiplique os bits
+        if (tam == 1) {
+            return Long.parseLong(String.valueOf(X.charAt(0))) * Long.parseLong(String.valueOf(Y.charAt(0)));
+        }
+        
+        // Divida as strings em duas partes
+        int m = tam / 2;
+        String a = X.substring(0, m);
+        String b = X.substring(m);
+        String c = Y.substring(0, m);
+        String d = Y.substring(m);
+        
+        // Recursivamente calcule os produtos
+        long e = multiplyAux(a, c, m);
+        long f = multiplyAux(b, d, m);
+        long g = multiplyAux(b, c, m);
+        long h = multiplyAux(a, d, m);
+        
+        // Combine os resultados para obter o produto final
+        return (1L << (2 * m)) * e + (1L << m) * (g + h) + f;
+    }
+    
+    // Função auxiliar para preencher a string de bits até o comprimento desejado
+    private static String tamanhoString(String str, int length) {
+        while (str.length() < length) {
+            str = "0" + str;
+        }
+        return str;
     }
 }
